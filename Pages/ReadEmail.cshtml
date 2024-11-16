@@ -1,0 +1,32 @@
+﻿@page
+@model ReadEmailModel
+@{
+    ViewData["Title"] = "ReadEmail page";
+}
+
+<table class="table">
+    <thread>
+        <tr>
+            <th>From</th>
+            <th>Subject</th>
+            <th>Massage</th>
+        </tr>
+    </thread>
+
+    <tbody>
+        <tr>
+            
+
+            @foreach (var item in Model.listEmails2)
+            {
+            <tr>
+                <td>@item.EmailSender</td>
+                <td>@item.EmailSubject</td>
+                <td>@item.EmailMessage</td>
+            </tr>
+            }
+        </tr>
+    </tbody>
+</table>
+<!-- <a class="btn btn-primary btn-sm" href="/Composeemail?Sender=@User.Identity.Name">Compose New Email</a> -->
+<a class="btn btn-primary btn-sm" href="Index">Close</a>

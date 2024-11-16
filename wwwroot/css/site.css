@@ -1,9 +1,17 @@
+@import url('https://fonts.googleapis.com/css2?family=Sarabun:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+
+* {
+    font-family: "Ubuntu", serif;
+    font-weight: 700;
+    font-style: normal;
+}
 html {
   font-size: 14px;
 }
 
 @media (min-width: 768px) {
   html {
+    font-weight: bold;
     font-size: 16px;
   }
 }
@@ -14,9 +22,9 @@ html {
 }
 
 body {
-  margin-bottom: 60px;
-  background-color: maroon;
-  color: white;
+    margin-bottom: 60px;
+    background: linear-gradient(to bottom, rgb(9, 43, 85) 0%, rgb(13, 84, 145) 35%, rgb(54, 144, 192) 100%);
+    color: white;
 }
 
 th {

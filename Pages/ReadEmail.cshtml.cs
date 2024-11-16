@@ -1,26 +1,22 @@
-﻿using FinalProject.Areas.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Data.SqlClient;
-using Microsoft.AspNetCore.Identity;
-using System.Data;
 
 namespace FinalProject.Pages
 {
-    public class IndexModel : PageModel
+    public class ReadEmailModel : PageModel
     {
+        public List<EmailInfo> listEmails2 = new List<EmailInfo>();
 
-        public List<EmailInfo> listEmails = new List<EmailInfo>();
+        private readonly ILogger<ReadEmailModel> _logger;
 
-        private readonly ILogger<IndexModel> _logger;
-
-        public IndexModel(ILogger<IndexModel> logger)
+        public ReadEmailModel(ILogger<ReadEmailModel> logger)
         {
             _logger = logger;
         }
-
         public void OnGet()
         {
+            String id = Request.Query["emailid"];
             try
             {
                 String connectionString = "Server=tcp:wer4.database.windows.net,1433;Initial Catalog=wer4;Persist Security Info=False;User ID=wer4;Password=Weare44_;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
@@ -28,16 +24,8 @@ namespace FinalProject.Pages
                 {
                     connection.Open();
 
-                    string username = "";
-                    if (User.Identity.Name == null)
-                    {
-                        username = "";
-                    } else
-                    {
-                        username = User.Identity.Name;
-                    }
-
-                    String sql = "SELECT * FROM emails WHERE receiver='" + username +"'";
+                    
+                    String sql = "SELECT * FROM emails WHERE id='" + id + "'";
                     using (SqlCommand command = new SqlCommand(sql, connection))
                     {
                         using (SqlDataReader reader = command.ExecuteReader())
@@ -48,12 +36,9 @@ namespace FinalProject.Pages
                                 emailInfo.EmailID = "" + reader.GetInt32(0);
                                 emailInfo.EmailSubject = reader.GetString(1);
                                 emailInfo.EmailMessage = reader.GetString(2);
-                                emailInfo.EmailDate = reader.GetString(3);
-                                emailInfo.EmailIsRead = "" + reader.GetInt32(4);
                                 emailInfo.EmailSender = reader.GetString(5);
-                                emailInfo.EmailReceiver = reader.GetString(6);
 
-                                listEmails.Add(emailInfo);
+                                listEmails2.Add(emailInfo);
                             }
                         }
                     }
@@ -64,17 +49,29 @@ namespace FinalProject.Pages
             {
                 Console.WriteLine(ex.ToString());
             }
+
+            try
+            {
+                String connectionString = "Server=tcp:wer4.database.windows.net,1433;Initial Catalog=wer4;Persist Security Info=False;User ID=wer4;Password=Weare44_;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+                    string sql = "UPDATE emails SET isRead=@isRead WHERE id=@id";
+                    using (SqlCommand command = new SqlCommand(sql, connection))
+                    {
+                        command.Parameters.AddWithValue("@id", id);
+                        command.Parameters.AddWithValue("@isRead", 1);
+
+                        command.ExecuteNonQuery();
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
     }
-    public class EmailInfo
-    {
-        public String EmailID;
-        public String EmailSubject;
-        public String EmailMessage;
-        public String EmailDate;
-        public String EmailIsRead;
-        public String EmailSender;
-        public String EmailReceiver;
-    }
-
 }
+
