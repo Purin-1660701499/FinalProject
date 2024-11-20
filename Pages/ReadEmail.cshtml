@@ -1,32 +1,173 @@
 ﻿@page
 @model ReadEmailModel
 @{
-    ViewData["Title"] = "ReadEmail page";
+    ViewData["Title"] = "Read Email";
 }
 
-<table class="table">
-    <thread>
-        <tr>
-            <th>From</th>
-            <th>Subject</th>
-            <th>Massage</th>
-        </tr>
-    </thread>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
+<style>
+    body {
+        font-family: 'Roboto', sans-serif;
+        background-color: #f5f5f5;
+        margin: 0;
+        padding: 0;
+        color: #000; /* สีฟอนต์ดำ */
+    }
 
-    <tbody>
-        <tr>
-            
+    .container {
+        margin: 20px auto;
+        max-width: 1200px;
+        background-color: #ffffff;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+    }
 
+    h3 {
+        text-align: center;
+        color: #000;
+        margin-bottom: 20px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th, td {
+        padding: 15px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+        color: #000; 
+    }
+
+    th {
+        background-color: #f5f5f5;
+        font-weight: bold;
+        color: #333;
+    }
+
+    td {
+        word-wrap: break-word;
+        white-space: pre-wrap;
+    }
+
+    
+    .from-column {
+        background-color: #f9f9f9;
+        border-left: 2px solid #ddd;
+    }
+
+    .subject-column {
+        background-color: #fff;
+        border-left: 2px solid #ddd;
+    }
+
+    .message-column {
+        background-color: #f9f9f9;
+        border-left: 2px solid #ddd;
+    }
+
+    .email-subject {
+        max-width: 300px;
+        word-wrap: break-word;
+    }
+
+    .email-message {
+        max-height: 200px;
+        overflow: auto;
+        word-wrap: break-word;
+        white-space: pre-wrap;
+    }
+
+    .btn {
+        padding: 8px 16px;
+        border-radius: 4px;
+        font-weight: bold;
+        text-decoration: none;
+    }
+
+    .btn-primary {
+        background-color: #1a73e8;
+        color: #fff;
+    }
+
+        .btn-primary:hover {
+            background-color: #155db2;
+        }
+
+    .btn-secondary {
+        background-color: #f1f1f1;
+        color: #000;
+    }
+
+        .btn-secondary:hover {
+            background-color: #e0e0e0;
+        }
+
+    
+    .btn-group {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+    }
+
+    .btn-compose {
+        background-color: #1a73e8;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 50px;
+        font-size: 16px;
+        font-weight: bold;
+        text-decoration: none;
+    }
+
+        .btn-compose:hover {
+            background-color: #155db2;
+        }
+</style>
+
+<div class="container">
+    <h3>@ViewData["Title"]</h3>
+
+    <table>
+        <thead>
+            <tr>
+                <th class="from-column">From</th>
+                <th class="subject-column">Subject</th>
+                <th class="message-column">Message</th>
+            </tr>
+        </thead>
+        <tbody>
             @foreach (var item in Model.listEmails2)
             {
-            <tr>
-                <td>@item.EmailSender</td>
-                <td>@item.EmailSubject</td>
-                <td>@item.EmailMessage</td>
-            </tr>
+                <tr>
+                    
+                    <td class="from-column">@item.EmailSender</td>
+
+                    
+                    <td class="subject-column email-subject">
+                        @item.EmailSubject
+                    </td>
+
+                    
+                    <td class="message-column email-message">
+                        @item.EmailMessage
+                    </td>
+                </tr>
             }
-        </tr>
-    </tbody>
-</table>
-<!-- <a class="btn btn-primary btn-sm" href="/Composeemail?Sender=@User.Identity.Name">Compose New Email</a> -->
-<a class="btn btn-primary btn-sm" href="Index">Close</a>
+        </tbody>
+    </table>
+
+    
+    <div class="btn-group mt-3">
+        
+        <a class="btn btn-primary" href="Index">Close</a>
+        
+        <a href="/Composeemail?Sender=@User.Identity.Name" class="btn btn-compose">
+            <i class="fas fa-plus"></i> Compose New Email
+        </a>
+    </div>
+</div>

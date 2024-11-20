@@ -1,5 +1,4 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
+﻿
 #nullable disable
 
 using System;
@@ -56,26 +55,40 @@ namespace FinalProject.Areas.Identity.Pages.Account
         public class InputModel
         {
             [Required]
-            [StringLength(255, ErrorMessage = "The First Name must be in between 1 to 255.", MinimumLength = 1)]
+            [StringLength(255, ErrorMessage = "The First Name must be between 1 to 255 characters.")]
+            [RegularExpression(@"^[a-zA-Z\s]+$", ErrorMessage = "The First Name must only contain letters.")]
             public string FirstName { get; set; }
 
             [Required]
-            [StringLength(255, ErrorMessage = "The Last Name must be in between 1 to 255.", MinimumLength = 1)]
+            [StringLength(255, ErrorMessage = "The Last Name must be between 1 to 255 characters.")]
+            [RegularExpression(@"^[a-zA-Z\s]+$", ErrorMessage = "The Last Name must only contain letters.")]
             public string LastName { get; set; }
 
             [Required]
-            [StringLength(15, ErrorMessage = "The Mobile Phone must be in between 7 to 15.", MinimumLength = 7)]
+            [StringLength(15, ErrorMessage = "The Mobile Phone must be between 7 to 15 characters.")]
+            [RegularExpression(@"^\d{7,15}$", ErrorMessage = "The Mobile Phone must only contain numbers and be 7 to 15 digits long.")]
             public string MobilePhone { get; set; }
 
             [Required]
-            [StringLength(255, ErrorMessage = "The Username must be between 1 to 255.", MinimumLength = 1)]
-            public string UserName { get; set; }
+            [StringLength(255, ErrorMessage = "The Email must be between 1 to 255 characters.")]
+            [EmailAddress(ErrorMessage = "Invalid email address.")]
+            public string Email { get; set; }
 
             [Required]
             [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+            [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{6,20}$",
+    ErrorMessage = "Passwords must be 6-20 characters long, have at least one lowercase letter, one uppercase letter, and one special character.")]
             [DataType(DataType.Password)]
             public string Password { get; set; }
+
+
+
+
+
         }
+
+
+
 
 
         public async Task OnGetAsync(string returnUrl = null)
@@ -88,16 +101,25 @@ namespace FinalProject.Areas.Identity.Pages.Account
         {
             returnUrl ??= Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+
             if (ModelState.IsValid)
             {
+                
+                var existingUser = await _userManager.FindByEmailAsync(Input.Email);
+                if (existingUser != null)
+                {
+                    ModelState.AddModelError(string.Empty, "Email is already taken.");
+                    return Page();
+                }
+
                 var user = CreateUser();
 
                 user.FirstName = Input.FirstName;
                 user.LastName = Input.LastName;
                 user.MobilePhone = Input.MobilePhone;
 
-                await _userStore.SetUserNameAsync(user, Input.UserName, CancellationToken.None);
-                await _emailStore.SetEmailAsync(user, Input.UserName, CancellationToken.None);
+                await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
+                await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
                 if (result.Succeeded)
@@ -113,12 +135,12 @@ namespace FinalProject.Areas.Identity.Pages.Account
                         values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
                         protocol: Request.Scheme);
 
-                    await _emailSender.SendEmailAsync(Input.UserName, "Confirm your email",
+                    await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
                         $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
-                        return RedirectToPage("RegisterConfirmation", new { email = Input.UserName, returnUrl = returnUrl });
+                        return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
                     }
                     else
                     {
@@ -132,9 +154,9 @@ namespace FinalProject.Areas.Identity.Pages.Account
                 }
             }
 
-            // If we got this far, something failed, redisplay form
             return Page();
         }
+
 
         private FinalProjectUser CreateUser()
         {

@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace FinalProject.Areas.Identity.Data;
 
-// Add profile data for application users by adding properties to the FinalProjectUser class
+
 public class FinalProjectUser : IdentityUser
 {
     public string FirstName { get; set; }

@@ -3109,7 +3109,7 @@ EventHandler.on(document, EVENT_CLICK_DATA_API$2, SELECTOR_DATA_TOGGLE$2, functi
 
   EventHandler.one(target, EVENT_SHOW$3, showEvent => {
     if (showEvent.defaultPrevented) {
-      // only register focus restorer if modal will actually get shown
+      
       return;
     }
 

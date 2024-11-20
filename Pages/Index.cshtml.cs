@@ -23,7 +23,7 @@ namespace FinalProject.Pages
         {
             try
             {
-                String connectionString = "Server=tcp:wer4.database.windows.net,1433;Initial Catalog=wer4;Persist Security Info=False;User ID=wer4;Password=Weare44_;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
+                String connectionString = "Server=tcp:twelveeyesfinal.database.windows.net,1433;Initial Catalog=twelveeyesfinal;Persist Security Info=False;User ID=twelveeyesfinal;Password=Glassboy436;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     connection.Open();

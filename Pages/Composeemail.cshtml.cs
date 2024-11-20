@@ -55,7 +55,9 @@ namespace FinalProject.Pages
             try
             {
                 DateTime now = DateTime.Now;
-                string formattedDate = now.ToString("dd-MM-yyyy HH:mm:ss");
+                TimeZoneInfo thailandTimeZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+                DateTime thailandTime = TimeZoneInfo.ConvertTime(now, thailandTimeZone);
+                string formattedDate = thailandTime.ToString("dd-MM-yyyy HH:mm:ss");
                 string username = "";
                 if (User.Identity.Name == null)
                 {
@@ -65,7 +67,7 @@ namespace FinalProject.Pages
                 {
                     username = User.Identity.Name;
                 }
-                String connectionString = "Server=tcp:wer4.database.windows.net,1433;Initial Catalog=wer4;Persist Security Info=False;User ID=wer4;Password=Weare44_;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
+                String connectionString = "Server=tcp:twelveeyesfinal.database.windows.net,1433;Initial Catalog=twelveeyesfinal;Persist Security Info=False;User ID=twelveeyesfinal;Password=Glassboy436;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     connection.Open();
